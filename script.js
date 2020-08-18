@@ -3,7 +3,7 @@ const settings = {
     testAmount: 20,
     pageSpeedAPIURL: `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent('https://foo-website.com/')}&category=PERFORMANCE&strategy=DESKTOP`,
     delayAPIURL: `https://httpstat.us/200?sleep=${60 * 1000}`, // seconds * miliseconds
-    lastNo: (await table.selectRecordsAsync().then(({records}) => records[records.length - 1].getCellValue('No')))
+    lastNo: (await table.selectRecordsAsync().then(({records}) => records[records.length - 1].getCellValue('No.')))
 };
 
 // A function for testing web performance
@@ -25,14 +25,14 @@ async function pageSpeedTest(testNo, delay = false) {
                 fields: {
                     'Name': 'Overall',
                     'Score': json.lighthouseResult.categories.performance.score,
-                    'No': testNo
+                    'No.': testNo
                 }
             },
             {
                 fields: {
                     'Name': 'Largest Contentful Paint',
                     'Score': largestPaint.score,
-                    'No': testNo
+                    'No.': testNo
                 }
             }
         ]);
