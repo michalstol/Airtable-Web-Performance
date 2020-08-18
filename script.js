@@ -6,12 +6,14 @@ const settings = {
     lastNo: (await table.selectRecordsAsync().then(({records}) => records[records.length - 1].getCellValue('No')))
 };
 
+// A function for testing web performance
 async function pageSpeedTest(testNo, delay = false) {
     const {pageSpeedAPIURL, delayAPIURL} = settings;
 
     if (typeof testNo !== 'number') return 0;
-    if (delay) await fetch(delayAPIURL);
+    if (delay) await fetch(delayAPIURL); // delay between tests
 
+    // request to PageSpeed API
     return await fetch(pageSpeedAPIURL).then(response => response.json())
     .then(async function(json) {
         if (!json || !json.lighthouseResult || !json.lighthouseResult.audits) return 0;
@@ -41,6 +43,7 @@ async function pageSpeedTest(testNo, delay = false) {
     });
 }
 
+// part of code responsible for counting next test's number and running tests
 let counter = settings.lastNo + 1;
 
 for (let i = 0; i < settings.testAmount; i++) {
