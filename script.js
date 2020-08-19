@@ -13,29 +13,25 @@ async function pageSpeedTest(testNo, delay = false) {
     if (typeof testNo !== 'number') return 0;
     if (delay) await fetch(delayAPIURL); // delay between tests
 
-    // request to PageSpeed API
     return await fetch(pageSpeedAPIURL).then(response => response.json())
     .then(async function(json) {
         if (!json || !json.lighthouseResult || !json.lighthouseResult.audits) return 0;
 
         const {['largest-contentful-paint']: largestPaint} = json.lighthouseResult.audits;
-
-        await table.createRecordsAsync([
-            {
+        const setRecord = function(name = '', score = -1) {
+            return {
                 fields: {
-                    'Name': 'Overall',
-                    'Score': json.lighthouseResult.categories.performance.score,
-                    'No.': testNo
-                }
-            },
-            {
-                fields: {
-                    'Name': 'Largest Contentful Paint',
-                    'Score': largestPaint.score,
+                    'Name': name,
+                    'Score': score,
                     'No.': testNo
                 }
             }
-        ]);
+        };
+
+        await table.createRecordsAsync([
+            setRecord('Overall', json.lighthouseResult.categories.performance.score),
+            setRecord('Largest Contentful Paint', largestPaint.score)
+        ].filter(record => record.fields['Score'] !== -1));
 
         output.text(`test no. ${testNo} ${delay ? 'with' : 'without'} delay is done`);
 
