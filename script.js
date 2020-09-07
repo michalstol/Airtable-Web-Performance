@@ -10,7 +10,7 @@ const settings = {
 async function pageSpeedTest(testNo, delay = false) {
     const {pageSpeedAPIURL, delayAPIURL} = settings;
 
-    if (typeof testNo !== 'number') return 0;
+    if (typeof testNo !== 'number' || isNaN(testNo)) return 0;
     if (delay) await fetch(delayAPIURL); // delay between tests
 
     return await fetch(pageSpeedAPIURL).then(response => response.json())
